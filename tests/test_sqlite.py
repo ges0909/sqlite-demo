@@ -10,7 +10,7 @@ def connection():
     return sqlite3.connect(DATABASE)
 
 
-def test_sqlite_basics():
+def test_sqlite_basic():
     connection = sqlite3.connect(DATABASE)
     cursor = connection.cursor()
 
@@ -19,7 +19,7 @@ def test_sqlite_basics():
         first VARCHAR(20), 
         last VARCHAR(30), 
         date_of_birth DATE
-    );"""
+    )"""
     cursor.execute(sql)
     connection.commit()
 
@@ -42,7 +42,7 @@ def test_create_table(connection):
         )
 
 
-def test_insert_multiple_rows(connection):
+def test_insert_many_rows(connection):
     sql = "INSERT INTO USERS (id, name, age) VALUES(?, ?, ?)"
     values = [
         (1, "Alice", 21),
@@ -51,9 +51,10 @@ def test_insert_multiple_rows(connection):
     ]
     with connection:
         connection.executemany(sql, values)
+    assert connection.total_changes == 3
 
 
-def test_select_row(connection):
+def test_select_rows(connection):
     with connection:
         rows = connection.execute(
             "SELECT * FROM USERS WHERE age <= ?", (22,)
